@@ -6,8 +6,8 @@ import click
 
 from botocore.exceptions import ClientError
 
-from deploy.client import autoscalinggroup
-from deploy.client import elasticloadbalancer
+from artifact.client import autoscalinggroup
+from artifact.client import elasticloadbalancer
 
 
 @click.group()

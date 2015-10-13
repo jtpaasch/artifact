@@ -2,7 +2,7 @@
 
 """A module to fetch stats about auto scaling groups."""
 
-from deploy.client import autoscalinggroup
+from artifact.client import autoscalinggroup
 
 
 def get_auto_scaling_groups():

@@ -2,7 +2,7 @@
 
 """A module to handle IAM groups and users."""
 
-from deploy.client.utils import get_client
+from artifact.client.utils import get_client
 
 
 def create_user(username):

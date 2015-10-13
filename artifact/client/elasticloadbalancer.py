@@ -2,7 +2,7 @@
 
 """A module to handle elastic load balancers."""
 
-from deploy.client.utils import get_client
+from artifact.client.utils import get_client
 
 
 def create_elastic_load_balancer(

@@ -2,7 +2,7 @@
 
 """A module to handle subnets."""
 
-from deploy.client.utils import get_client
+from artifact.client.utils import get_client
 
 
 def create_subnet(vpc_id, cidr_block):

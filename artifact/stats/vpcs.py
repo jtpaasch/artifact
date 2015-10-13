@@ -2,7 +2,7 @@
 
 """A module to fetch stats about VCPs."""
 
-from deploy.client import vpc
+from artifact.client import vpc
 
 
 def get_vpcs():

@@ -2,7 +2,7 @@
 
 """A module to fetch stats about subnets."""
 
-from deploy.client import subnet
+from artifact.client import subnet
 
 
 def get_subnets():

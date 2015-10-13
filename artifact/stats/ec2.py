@@ -2,7 +2,7 @@
 
 """A module to fetch stats about EC2 instances."""
 
-from deploy.client import ec2 as ec2lib
+from artifact.client import ec2 as ec2lib
 
 
 def get_instances():

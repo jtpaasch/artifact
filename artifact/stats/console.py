@@ -8,13 +8,13 @@ import time
 import curses
 from curses import wrapper
 
-from deploy.stats import autoscalinggroups
-from deploy.stats import ec2
-from deploy.stats import elasticloadbalancers
-from deploy.stats import launchconfigurations
-from deploy.stats import securitygroups
-from deploy.stats import subnets
-from deploy.stats import vpcs
+from artifact.stats import autoscalinggroups
+from artifact.stats import ec2
+from artifact.stats import elasticloadbalancers
+from artifact.stats import launchconfigurations
+from artifact.stats import securitygroups
+from artifact.stats import subnets
+from artifact.stats import vpcs
 
 
 def paint_box(stdscr, width, start_y, start_x, heading, fieldsets):

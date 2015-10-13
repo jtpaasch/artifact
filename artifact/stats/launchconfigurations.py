@@ -2,7 +2,7 @@
 
 """A module to fetch stats about launch configurations."""
 
-from deploy.client import launchconfiguration
+from artifact.client import launchconfiguration
 
 
 def get_launch_configurations():

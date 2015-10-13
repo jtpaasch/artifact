@@ -2,7 +2,7 @@
 
 """A module to handle Security Groups."""
 
-from deploy.client.utils import get_client
+from artifact.client.utils import get_client
 
 
 def create_security_group(name, vpc_id):

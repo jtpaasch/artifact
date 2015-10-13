@@ -2,7 +2,7 @@
 
 """A module to handle ssh keys."""
 
-from deploy.client.utils import get_client
+from artifact.client.utils import get_client
 
 
 def create_keys(name):

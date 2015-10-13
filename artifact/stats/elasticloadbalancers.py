@@ -2,7 +2,7 @@
 
 """A module to fetch stats about elastic load balancers."""
 
-from deploy.client import elasticloadbalancer
+from artifact.client import elasticloadbalancer
 
 
 def get_elastic_load_balancers():

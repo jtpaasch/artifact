@@ -2,7 +2,7 @@
 
 """A module to fetch stats about security groups."""
 
-from deploy.client import securitygroup
+from artifact.client import securitygroup
 
 
 def get_security_groups():
