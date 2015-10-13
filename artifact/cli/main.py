@@ -170,9 +170,10 @@ def create_elb(name, security_group):
     params = {}
     params["name"] = name
     params["listeners"] = [{
-            "Protocol": "HTTP",
-            "LoadBalancerPort": 80,
-            "InstancePort": 80,}]
+        "Protocol": "HTTP",
+        "LoadBalancerPort": 80,
+        "InstancePort": 80,
+        }]
     params["subnets"] = ["subnet-f6e9cadd", "subnet-a1e1f9d6"]
     params["security_groups"] = [security_group]
     try:

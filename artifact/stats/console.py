@@ -42,7 +42,6 @@ def paint_box(stdscr, width, start_y, start_x, heading, fieldsets):
                     start_x + indent,
                     str(field))
             start_y += 1
-                
 
 
 def show_vpcs(stdscr):
@@ -135,7 +134,8 @@ def show_auto_scaling_groups(stdscr):
         fieldset.append(group_name)
         if launch_config:
             fieldset.append(launch_config)
-        fieldset.append(str(min_size) + " " + str(max_size) + " " + str(desired_size))
+        size = str(min_size) + " " + str(max_size) + " " + str(desired_size)
+        fieldset.append(size)
         if availability_zones:
             fieldset += availability_zones
         if elastic_load_balancers:
