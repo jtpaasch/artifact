@@ -1,0 +1,21 @@
+# Python bytecode
+__pycache__
+
+# Build artifacts
+dist
+build
+
+# Editing artifacts
+*~
+*.swp
+
+# Tox directories
+.tox
+
+# Virtual environments
+venv
+pyvenv
+
+# Egg info
+*.egg-info
+
