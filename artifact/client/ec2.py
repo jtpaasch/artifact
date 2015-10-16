@@ -3,22 +3,31 @@
 """A module to handle EC2 instances."""
 
 from artifact.client.utils import get_client
+from artifact.client.utils import get_file_contents
 
 
 def create_instance(
         ami_id,
         security_group_id,
         key_name=None,
-        instance_type="t2.micro"):
+        instance_type="t2.micro",
+        user_data=None,
+        user_data_file=None):
     """Create an EC2 instance."""
     client = get_client("ec2")
-    response = client.run_instances(
-        ImageId=ami_id,
-        MinCount=1,
-        MaxCount=1,
-        KeyName=key_name,
-        SecurityGroupIds=[security_group_id],
-        InstanceType=instance_type)
+    params = {}
+    params["ImageId"] = ami_id
+    params["MinCount"] = 1
+    params["MaxCount"] = 1
+    params["SecurityGroupIds"] = [security_group_id]
+    if key_name:
+        params["KeyName"] = key_name
+    params["InstanceType"] = instance_type
+    if user_data:
+        params["UserData"] = user_data
+    elif user_data_file:
+        params["UserData"] = get_file_contents(user_data_file)
+    response = client.run_instances(**params)
     return response
 
 

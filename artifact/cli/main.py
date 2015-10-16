@@ -26,7 +26,7 @@ def app():
 @click.argument("name")
 @click.option(
     "--launch-configuration",
-    default="basic-launch-config",
+    default="BasicLaunchConfig",
     help="Used to launch new EC2 instances.")
 @click.option(
     "--min-size",
