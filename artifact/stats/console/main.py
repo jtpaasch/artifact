@@ -10,6 +10,7 @@ from curses import wrapper
 
 from artifact.stats.console import autoscalinggroups
 from artifact.stats.console import ec2
+from artifact.stats.console import ecsclusters
 from artifact.stats.console import elasticloadbalancers
 from artifact.stats.console import securitygroups
 from artifact.stats.console import launchconfigurations
@@ -32,6 +33,7 @@ def get_widgets():
     """Get a dict of widget definitions."""
     tty_rows = get_tty_rows()
     row_1_rows = tty_rows - 20
+    row_2_rows = 30
     return [
         {
             "name": "VPCs",
@@ -74,7 +76,7 @@ def get_widgets():
             "top_row": 0,
             "left_col": 80,
             "rows": row_1_rows,
-            "cols": 40,
+            "cols": 30,
             "pad": None,
             "data": [["No data"]],
             "data_func": ec2.data,
@@ -84,9 +86,9 @@ def get_widgets():
         {
             "name": "ELBs",
             "top_row": 0,
-            "left_col": 120,
+            "left_col": 110,
             "rows": row_1_rows,
-            "cols": 40,
+            "cols": 30,
             "pad": None,
             "data": [["No data"]],
             "data_func": elasticloadbalancers.data,
@@ -97,7 +99,7 @@ def get_widgets():
             "name": "Security Groups",
             "top_row": row_1_rows,
             "left_col": 0,
-            "rows": 30,
+            "rows": row_2_rows,
             "cols": 25,
             "pad": None,
             "data": [["No data"]],
@@ -109,14 +111,26 @@ def get_widgets():
             "name": "Launch Configs",
             "top_row": row_1_rows,
             "left_col": 25,
-            "rows": 30,
+            "rows": row_2_rows,
             "cols": 25,
             "pad": None,
             "data": [["No data"]],
             "data_func": launchconfigurations.data,
             "heading_func": utils.heading,
             "body_func": utils.body,
-        },  
+        },
+        {
+            "name": "ECS Clusters",
+            "top_row": row_1_rows,
+            "left_col": 50,
+            "rows": row_2_rows,
+            "cols": 25,
+            "pad": None,
+            "data": [["No data"]],
+            "data_func": ecsclusters.data,
+            "heading_func": utils.heading,
+            "body_func": utils.body,
+        },
     ]
 
 

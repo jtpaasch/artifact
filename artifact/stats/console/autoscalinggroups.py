@@ -20,15 +20,19 @@ def data(widget):
             launch_config_name = datum.get("LaunchConfigurationName")
             if launch_config_name:
                 fieldset.append(launch_config_name)
-            min_size = datum.get("MinSize") or 0
-            max_size = datum.get("MaxSize") or 0
-            desired_size = datum.get("DesiredCapacity") or 0
-            size = min_size + " " + max_size + " " + desired_size
+            min_size = datum.get("MinSize")
+            max_size = datum.get("MaxSize")
+            desired_size = datum.get("DesiredCapacity")
+            size = str(min_size) \
+                   + " " \
+                   + str(max_size) \
+                   + " " \
+                   + str(desired_size)
             if size:
                 fieldset.append(size)
             availability_zones = datum.get("AvailabilityZones")
             if availability_zones:
-                fieldset.append(availability_zones)
+                fieldset += availability_zones
             elbs = datum.get("LoadBalancerNames")
             if elbs:
                 fieldset += elbs
