@@ -81,6 +81,7 @@ def create_cf(
 @click.argument("name")
 def delete_cf(name):
     """Delete a Cloud Formation artifact."""
+    # Note: This does not raise an error if the stack doesn't exist.
     response = cloudformation.delete_stack(name)
     click.echo("Stack " + name + " terminating.")
 

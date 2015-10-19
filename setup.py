@@ -78,7 +78,7 @@ setup(
     entry_points={
         "console_scripts": [
             "artifact = artifact.cli.main:cli",
-            "stats = artifact.stats.console:start",
+            "stats = artifact.stats.console.main:start",
         ]
     },
 
