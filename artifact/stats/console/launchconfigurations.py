@@ -2,15 +2,14 @@
 
 """A module to update console stats about launch configurations."""
 
-from datetime import datetime
-
+from artifact.stats.console.utils import is_update_needed
 from artifact.stats.data.launchconfigurations import get_launch_configurations
 
 
 def data(widget):
     """Get data for the widget."""
     result = widget["data"]
-    if not datetime.now().second % 5:
+    if is_update_needed():
         launchconfig_data = get_launch_configurations()
         fieldsets = []
         for datum in launchconfig_data:

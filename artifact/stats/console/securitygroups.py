@@ -2,15 +2,14 @@
 
 """A module to update console stats about securitygroups."""
 
-from datetime import datetime
-
+from artifact.stats.console.utils import is_update_needed
 from artifact.stats.data.securitygroups import get_security_groups
 
 
 def data(widget):
     """Get data for the widget."""
     result = widget["data"]
-    if not datetime.now().second % 5:
+    if is_update_needed():
         sg_data = get_security_groups()
         fieldsets = []
         for datum in sg_data:

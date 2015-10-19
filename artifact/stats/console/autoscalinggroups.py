@@ -2,15 +2,14 @@
 
 """A module to update console stats about auto scaling groups."""
 
-from datetime import datetime
-
+from artifact.stats.console.utils import is_update_needed
 from artifact.stats.data.autoscalinggroups import get_auto_scaling_groups
 
 
 def data(widget):
     """Get data for the widget."""
     result = widget["data"]
-    if not datetime.now().second % 5:
+    if is_update_needed():
         asg_data = get_auto_scaling_groups()
         fieldsets = []
         for datum in asg_data:

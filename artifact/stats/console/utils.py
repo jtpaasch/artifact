@@ -2,7 +2,13 @@
 
 """A module with utils for rendering stats in the console."""
 
+from datetime import datetime
 import curses
+
+
+def is_update_needed():
+    """Decide if a widget needs its data updated."""
+    return not datetime.now().second % 10
 
 
 def heading(widget):

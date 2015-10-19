@@ -2,15 +2,14 @@
 
 """A module to update console stats about subnets."""
 
-from datetime import datetime
-
+from artifact.stats.console.utils import is_update_needed
 from artifact.stats.data.subnets import get_subnets
 
 
 def data(widget):
     """Get data for the widget."""
     result = widget["data"]
-    if not datetime.now().second % 5:
+    if is_update_needed():
         subnet_data = get_subnets()
         fieldsets = []
         for datum in subnet_data:

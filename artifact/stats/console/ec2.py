@@ -2,15 +2,14 @@
 
 """A module to update console stats about EC2 instances."""
 
-from datetime import datetime
-
+from artifact.stats.console.utils import is_update_needed
 from artifact.stats.data.ec2 import get_instances
 
 
 def data(widget):
     """Get data for the widget."""
     result = widget["data"]
-    if not datetime.now().second % 5:
+    if is_update_needed():
         ec2_data = get_instances()
         fieldsets = []
         for datum in ec2_data:
