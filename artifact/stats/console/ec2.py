@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""A module to update console stats about subnets."""
+"""A module to update console stats about EC2 instances."""
 
 from datetime import datetime
 

@@ -11,6 +11,8 @@ from curses import wrapper
 from artifact.stats.console import autoscalinggroups
 from artifact.stats.console import ec2
 from artifact.stats.console import elasticloadbalancers
+from artifact.stats.console import securitygroups
+from artifact.stats.console import launchconfigurations
 from artifact.stats.console import subnets
 from artifact.stats.console import utils
 from artifact.stats.console import vpcs
@@ -29,12 +31,13 @@ def get_tty_cols():
 def get_widgets():
     """Get a dict of widget definitions."""
     tty_rows = get_tty_rows()
+    row_1_rows = tty_rows - 20
     return [
         {
             "name": "VPCs",
             "top_row": 0,
             "left_col": 0,
-            "rows": tty_rows,
+            "rows": row_1_rows,
             "cols": 25,
             "pad": None,
             "data": [["No data"]],
@@ -46,7 +49,7 @@ def get_widgets():
             "name": "Subnets",
             "top_row": 0,
             "left_col": 25,
-            "rows": tty_rows,
+            "rows": row_1_rows,
             "cols": 25,
             "pad": None,
             "data": [["No data"]],
@@ -58,7 +61,7 @@ def get_widgets():
             "name": "Auto Scaling Groups",
             "top_row": 0,
             "left_col": 50,
-            "rows": tty_rows,
+            "rows": row_1_rows,
             "cols": 30,
             "pad": None,
             "data": [["No data"]],
@@ -70,7 +73,7 @@ def get_widgets():
             "name": "Instances",
             "top_row": 0,
             "left_col": 80,
-            "rows": tty_rows,
+            "rows": row_1_rows,
             "cols": 40,
             "pad": None,
             "data": [["No data"]],
@@ -82,7 +85,7 @@ def get_widgets():
             "name": "ELBs",
             "top_row": 0,
             "left_col": 120,
-            "rows": tty_rows,
+            "rows": row_1_rows,
             "cols": 40,
             "pad": None,
             "data": [["No data"]],
@@ -90,6 +93,30 @@ def get_widgets():
             "heading_func": utils.heading,
             "body_func": utils.body,
         },
+        {
+            "name": "Security Groups",
+            "top_row": row_1_rows,
+            "left_col": 0,
+            "rows": 30,
+            "cols": 25,
+            "pad": None,
+            "data": [["No data"]],
+            "data_func": securitygroups.data,
+            "heading_func": utils.heading,
+            "body_func": utils.body,
+        },
+        {
+            "name": "Launch Configs",
+            "top_row": row_1_rows,
+            "left_col": 25,
+            "rows": 30,
+            "cols": 25,
+            "pad": None,
+            "data": [["No data"]],
+            "data_func": launchconfigurations.data,
+            "heading_func": utils.heading,
+            "body_func": utils.body,
+        },  
     ]
 
 
