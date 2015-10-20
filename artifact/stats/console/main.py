@@ -272,7 +272,7 @@ def event_loop(screen):
             # Erase the screen if we need to update the screen.
             # This is an expensive operation, so we only do it if we need to.
             if do_update:
-                screen.clear()
+                screen.erase()
 
             # Paint each widget on the screen.
             for i, widget in enumerate(widgets):

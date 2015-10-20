@@ -23,17 +23,18 @@ def data(widget):
             if datum.get("ListenerDescriptions"):
                 listeners = datum.get("ListenerDescriptions")
                 if listeners:
-                    for listener in listeners:
+                    for listener_object in listeners:
+                        listener = listener_object.get("Listener")
                         protocol = listener.get("Protocol")
                         port = listener.get("LoadBalancerPort")
                         instance_protocol = listener.get("InstanceProtocol")
                         instance_port = listener.get("InstancePort")
                         ssl_cert = listener.get("SSLCertificateId")
-                        final = protocol + ":" + port \
+                        final = str(protocol) + ":" + str(port) \
                                 + " -> " \
-                                + instance_protocol + ":" + instance_port \
-                                + " " + ssl_cert
+                                + str(instance_protocol) + ":" + str(instance_port)
                         fieldset.append(final)
+            security_groups = datum.get("SecurityGroups")
             if security_groups:
                 fieldset += security_groups
             if datum.get("Instances"):

@@ -9,6 +9,7 @@ from botocore.exceptions import ClientError
 from artifact.client import autoscalinggroup
 from artifact.client import cloudformation
 from artifact.client import elasticloadbalancer
+from artifact.client import launchconfiguration
 
 
 from artifact.cli.utils import bash
