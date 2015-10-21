@@ -22,6 +22,9 @@ def data(widget):
                         instance_name = tag.get("Value")
             if instance_name:
                 fieldset.append(instance_name)
+            instance_id = datum.get("InstanceId")
+            if instance_id:
+                fieldset.append(instance_id)
             instance_type = datum.get("InstanceType")
             if instance_type:
                 fieldset.append(instance_type)

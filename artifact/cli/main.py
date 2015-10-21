@@ -2,15 +2,17 @@
 
 """The ``main`` module for the ``cli`` package."""
 
+import json
+
 import click
 
 from botocore.exceptions import ClientError
 
 from artifact.client import autoscalinggroup
 from artifact.client import cloudformation
+from artifact.client import ecs
 from artifact.client import elasticloadbalancer
 from artifact.client import launchconfiguration
-
 
 from artifact.cli.utils import bash
 from artifact.cli.utils.cloudformation import create_cf_template
@@ -20,6 +22,215 @@ from artifact.cli.utils.cloudformation import create_cf_template
 def cli():
     """Create artifacts in the cloud."""
     pass
+
+
+@cli.group()
+def cluster():
+    """Manage ECS cluster artifacts."""
+    pass
+
+
+@cluster.command(name="create")
+@click.argument("name")
+@click.option(
+    "--security-group",
+    default=["sg-be4db7d8"],
+    multiple=True,
+    help="AWS security group ID.")
+@click.option(
+    "--key",
+    default="quickly_fitchet",
+    help="Key name for instance.")
+@click.option(
+    "--role",
+    default="ecsInstanceRole",
+    help="IAM Instance profile.")
+@click.option(
+    "--min-size",
+    default=1,
+    help="Min number of instances.")
+@click.option(
+    "--max-size",
+    default=1,
+    help="Max number of instances.")
+@click.option(
+    "--desired-size",
+    default=1,
+    help="Desired number of instances.")
+@click.option(
+    "--subnet",
+    default=["subnet-a1e1f9d6"],
+    multiple=True,
+    help="A subnet to launch in.")
+def create_cluster(
+        name,
+        security_group,
+        key,
+        role,
+        min_size,
+        max_size,
+        desired_size,
+        subnet):
+    """Create an ECS cluster."""
+    # Create a cluster.
+    cluster_response = ecs.create_cluster(name)
+
+    # Create a launch config for that cluster.
+    lc_params = {}
+    lc_params["name"] = name
+    lc_params["ami_id"] = "ami-c16422a4"
+    lc_params["key_name"] = key
+    lc_params["security_groups"] = security_group
+    lc_params["public_ip"] = True
+    lc_params["user_data"] = "#!/bin/bash\n" \
+                             + "echo ECS_CLUSTER=" + name + " >> /etc/ecs/ecs.config"
+    lc_params["role_profile"] = role
+    lc_response = launchconfiguration.create_launch_configuration(**lc_params)
+
+    # Create an auto scaling group.
+    asg_params = {}
+    asg_params["name"] = name
+    asg_params["launch_configuration"] = name
+    asg_params["min_size"] = min_size
+    asg_params["max_size"] = max_size
+    asg_params["desired_size"] = desired_size
+    asg_params["subnets"] = subnet
+    asg_response = autoscalinggroup.create_auto_scaling_group(**asg_params)
+
+    # Report a message.
+    click.echo(name + " is launching.")
+
+
+@cluster.command(name="delete")
+@click.argument("name")
+def delete_cluster(name):
+    """Delete an ECS cluster."""
+    asg_response = autoscalinggroup.delete_auto_scaling_group(name)
+    lc_response = launchconfiguration.delete_launch_configuration(name)
+    instances_response = ecs.get_container_instances(name)
+    container_instances = instances_response.get("containerInstances")
+    if container_instances:
+        instance_ids = []
+        for instance in container_instances:
+            instance_id = instance.get("ec2InstanceId")
+            if instance_id:
+                instance_ids.append(instance_id)
+        if instance_ids:
+            click.echo("Waiting for instances to terminate...")
+            ecs.wait_for_container_instances_to_terminate(instance_ids)
+    cluster_response = ecs.delete_cluster(name)
+    click.echo(name + " terminated.")
+
+
+@cli.group()
+def task():
+    """Manage ECS tasks."""
+    pass
+
+    
+@task.command(name="create")
+@click.argument("definition_file", type=click.File("rb"))
+def create_task(definition_file):
+    """Create a task from a DEFINITION_FILE."""
+    contents = json.loads(definition_file.read().decode("utf-8"))
+    name = contents.get("family")
+    containers = contents.get("containerDefinitions")
+    volumes = contents.get("volumes")
+    td_response = ecs.create_task_definition(name, containers, volumes)
+    click.echo(name + " created.")
+
+
+@task.command(name="delete")
+@click.argument("name")
+def delete_task(name):
+    """Delete a task definition."""
+    td_response = ecs.delete_task_definition_family(name)
+    click.echo(name + " deleted.")    
+
+
+@task.command(name="run")
+@click.argument("name")
+@click.argument("cluster")
+def run_task(name, cluster):
+    """Run a task in a cluster."""
+    response = ecs.run_task(cluster, name)
+    click.echo("Running " + name + " in " + cluster)
+
+
+@task.command(name="stop")
+@click.argument("name")
+@click.argument("cluster")
+def stop_task(name, cluster):
+    """Stop a task in a cluster."""
+    response = ecs.stop_task(cluster, name)
+    click.echo("Stopping " + name)
+
+
+@cli.group()
+def service():
+    """Manage ECS services."""
+    pass
+
+
+@service.command(name="create")
+@click.argument("name")
+@click.argument("cluster")
+@click.option(
+    "--count",
+    default=1,
+    help="Desired number of tasks.")
+@click.option(
+    "--elb",
+    nargs=2,
+    help="Load_balancer -> container.")
+def create_service(name, cluster, count, elb):
+    """Create a service in a cluster."""
+    params = {}
+    params["name"] = name
+    params["task_definition"] = name
+    params["cluster"] = cluster
+    params["count"] = count
+    if elb:
+        params["load_balancers"] = [{
+            "loadBalancerName": elb[0],
+            "containerName": elb[1],
+            "containerPort": 80,
+        }]
+        params["role"] = "ecsServiceRole"
+    response = ecs.create_service(**params)
+    click.echo("Creating " + name + " in " + cluster)
+
+
+@service.command(name="delete")
+@click.argument("name")
+@click.argument("cluster")
+def delete_service(name, cluster):
+    """Delete a service in a cluster."""
+    scale_response = ecs.update_service(name, name, cluster, 0)
+    response = ecs.delete_service(name, cluster)
+    click.echo("Deleting " + name + " in " + cluster)
+
+
+@service.command(name="update")
+@click.argument("name")
+@click.argument("cluster")
+@click.option(
+    "--task-definition",
+    default=None,
+    help="A new task definition to use.")
+@click.option(
+    "--count",
+    type=int,
+    help="The number of tasks.")
+def update_service(name, cluster, task_definition, count):
+    """Update a service in a cluster."""
+    params = {}
+    if not task_definition:
+        task_definition = name
+    if not count:
+        raise click.ClickException("No count specified.")
+    response = ecs.update_service(name, task_definition, cluster, count)
+    click.echo("Updating " + name + " in " + cluster)
 
 
 @cli.group()

@@ -2,7 +2,6 @@
 
 """Utilities for other modules."""
 
-
 import boto3
 
 

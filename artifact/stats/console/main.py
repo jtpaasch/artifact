@@ -11,6 +11,10 @@ from curses import wrapper
 from artifact.stats.console import autoscalinggroups
 from artifact.stats.console import ec2
 from artifact.stats.console import ecsclusters
+from artifact.stats.console import ecscontainerinstances
+from artifact.stats.console import ecsservices
+from artifact.stats.console import ecstasks
+from artifact.stats.console import ecstaskdefinitions
 from artifact.stats.console import elasticloadbalancers
 from artifact.stats.console import securitygroups
 from artifact.stats.console import launchconfigurations
@@ -128,6 +132,54 @@ def get_widgets():
             "pad": None,
             "data": [["No data"]],
             "data_func": ecsclusters.data,
+            "heading_func": utils.heading,
+            "body_func": utils.body,
+        },
+        {
+            "name": "ECS Instances",
+            "top_row": row_1_rows,
+            "left_col": 75,
+            "rows": row_2_rows,
+            "cols": 25,
+            "pad": None,
+            "data": [["No data"]],
+            "data_func": ecscontainerinstances.data,
+            "heading_func": utils.heading,
+            "body_func": utils.body,
+        },
+        {
+            "name": "ECS Services",
+            "top_row": row_1_rows,
+            "left_col": 100,
+            "rows": row_2_rows,
+            "cols": 25,
+            "pad": None,
+            "data": [["No data"]],
+            "data_func": ecsservices.data,
+            "heading_func": utils.heading,
+            "body_func": utils.body,
+        },
+        {
+            "name": "ECS Tasks",
+            "top_row": row_1_rows,
+            "left_col": 125,
+            "rows": row_2_rows,
+            "cols": 25,
+            "pad": None,
+            "data": [["No data"]],
+            "data_func": ecstasks.data,
+            "heading_func": utils.heading,
+            "body_func": utils.body,
+        },
+        {
+            "name": "ECS Task Defs",
+            "top_row": row_1_rows,
+            "left_col": 150,
+            "rows": row_2_rows,
+            "cols": 25,
+            "pad": None,
+            "data": [["No data"]],
+            "data_func": ecstaskdefinitions.data,
             "heading_func": utils.heading,
             "body_func": utils.body,
         },

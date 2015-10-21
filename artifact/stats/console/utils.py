@@ -13,7 +13,7 @@ def break_into_lines(string, num):
 
 def is_update_needed():
     """Decide if a widget needs its data updated."""
-    return not datetime.now().second % 5
+    return not datetime.now().second % 2
 
 
 def heading(widget):
@@ -33,6 +33,11 @@ def body(widget):
     data = widget["data"]
     max_chars_per_line = widget["cols"] - 8
     line = 2
+    clear = " "
+    for x in range(widget["cols"] - 3):
+        clear += " "
+    for x in range(widget["rows"] - (line + 1)):
+        pad.addstr(x + line, 1, clear)
     for fieldset in data:
         for i, field in enumerate(fieldset):
             lines = break_into_lines(field, max_chars_per_line)
