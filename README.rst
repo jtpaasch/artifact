@@ -1,9 +1,9 @@
 Artifact
 ========
 
-A simple tool to deploy AWS artifacts in ye olde Amazon cloud.
-
-In development right now.
+This is a half-baked experiment I did with AWS and ncurses,
+so I could visualize my AWS resources in my terminal window. 
+I'm keeping it here so I don't lose it.
 
 
 Setup
