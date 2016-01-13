@@ -27,7 +27,7 @@ def data(widget):
             ingress_data = datum.get("IpPermissions")
             if ingress_data:
                 for rule_data in ingress_data:
-                    rule = rule_data.get("IpProtocol")
+                    rule = str(rule_data.get("IpProtocol")) 
                     if rule and rule_data.get("FromPort"):
                         rule += " "
                         rule += str(rule_data.get("FromPort"))
@@ -49,7 +49,7 @@ def data(widget):
             egress_data = datum.get("IpPermissionsEgress")
             if egress_data:
                 for rule_data in egress_data:
-                    rule = rule_data.get("FromPort")
+                    rule = str(rule_data.get("FromPort"))
                     if rule and rule_data.get("FromPort"):
                         rule += " "
                         rule += str(rule_data.get("FromPort"))

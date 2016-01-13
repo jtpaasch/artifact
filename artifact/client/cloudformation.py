@@ -6,7 +6,7 @@ from artifact.client.utils import get_client
 from artifact.client.utils import get_file_contents
 
 
-def create_stack(name, template=None, template_file=None, parameters=None):
+def create_stack(name, template=None, template_file=None, parameters=None, capabilities=None):
     """Create a Cloud Formation stack."""
     client = get_client("cloudformation")
     params = {}
@@ -17,6 +17,8 @@ def create_stack(name, template=None, template_file=None, parameters=None):
         params["TemplateBody"] = get_file_contents(template_file)
     if parameters:
         params["Parameters"] = parameters
+    if capabilities:
+        params["Capabilities"] = capabilities
     response = client.create_stack(**params)
     return response
 

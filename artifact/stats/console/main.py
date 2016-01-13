@@ -2,13 +2,15 @@
 
 """A module for displaying stats in the console."""
 
-from datetime import datetime
-import sys
-
 import curses
 from curses import wrapper
+from datetime import datetime
+import math
+import sys
 
 from artifact.stats.console import autoscalinggroups
+from artifact.stats.console import ebapplications
+from artifact.stats.console import ebenvironments
 from artifact.stats.console import ec2
 from artifact.stats.console import ecsclusters
 from artifact.stats.console import ecscontainerinstances
@@ -36,12 +38,16 @@ def get_tty_cols():
 def get_widgets():
     """Get a dict of widget definitions."""
     tty_rows = get_tty_rows()
-    row_1_rows = tty_rows - 20
-    row_2_rows = 30
+    row_1_rows = math.floor(tty_rows / 1.5)
+    row_2_rows = math.floor(tty_rows / 1.5)
+    row_3_rows = math.floor(tty_rows / 1.5)
+    row_1_top = 0
+    row_2_top = row_1_rows
+    row_3_top = row_1_rows + row_2_rows
     return [
         {
             "name": "VPCs",
-            "top_row": 0,
+            "top_row": row_1_top,
             "left_col": 0,
             "rows": row_1_rows,
             "cols": 25,
@@ -53,7 +59,7 @@ def get_widgets():
         },
         {
             "name": "Subnets",
-            "top_row": 0,
+            "top_row": row_1_top,
             "left_col": 25,
             "rows": row_1_rows,
             "cols": 25,
@@ -65,7 +71,7 @@ def get_widgets():
         },
         {
             "name": "Auto Scaling Groups",
-            "top_row": 0,
+            "top_row": row_1_top,
             "left_col": 50,
             "rows": row_1_rows,
             "cols": 30,
@@ -77,7 +83,7 @@ def get_widgets():
         },
         {
             "name": "Instances",
-            "top_row": 0,
+            "top_row": row_1_top,
             "left_col": 80,
             "rows": row_1_rows,
             "cols": 30,
@@ -89,7 +95,7 @@ def get_widgets():
         },
         {
             "name": "ELBs",
-            "top_row": 0,
+            "top_row": row_1_top,
             "left_col": 110,
             "rows": row_1_rows,
             "cols": 30,
@@ -101,7 +107,7 @@ def get_widgets():
         },
         {
             "name": "Security Groups",
-            "top_row": row_1_rows,
+            "top_row": row_2_top,
             "left_col": 0,
             "rows": row_2_rows,
             "cols": 25,
@@ -113,7 +119,7 @@ def get_widgets():
         },
         {
             "name": "Launch Configs",
-            "top_row": row_1_rows,
+            "top_row": row_2_top,
             "left_col": 25,
             "rows": row_2_rows,
             "cols": 25,
@@ -125,7 +131,7 @@ def get_widgets():
         },
         {
             "name": "ECS Clusters",
-            "top_row": row_1_rows,
+            "top_row": row_2_top,
             "left_col": 50,
             "rows": row_2_rows,
             "cols": 25,
@@ -137,7 +143,7 @@ def get_widgets():
         },
         {
             "name": "ECS Instances",
-            "top_row": row_1_rows,
+            "top_row": row_2_top,
             "left_col": 75,
             "rows": row_2_rows,
             "cols": 25,
@@ -149,7 +155,7 @@ def get_widgets():
         },
         {
             "name": "ECS Services",
-            "top_row": row_1_rows,
+            "top_row": row_2_top,
             "left_col": 100,
             "rows": row_2_rows,
             "cols": 25,
@@ -161,7 +167,7 @@ def get_widgets():
         },
         {
             "name": "ECS Tasks",
-            "top_row": row_1_rows,
+            "top_row": row_2_top,
             "left_col": 125,
             "rows": row_2_rows,
             "cols": 25,
@@ -173,13 +179,37 @@ def get_widgets():
         },
         {
             "name": "ECS Task Defs",
-            "top_row": row_1_rows,
+            "top_row": row_2_top,
             "left_col": 150,
             "rows": row_2_rows,
             "cols": 25,
             "pad": None,
             "data": [["No data"]],
             "data_func": ecstaskdefinitions.data,
+            "heading_func": utils.heading,
+            "body_func": utils.body,
+        },
+        {
+            "name": "EB Applications",
+            "top_row": row_3_top,
+            "left_col": 0,
+            "rows": row_3_rows,
+            "cols": 25,
+            "pad": None,
+            "data": [["No data"]],
+            "data_func": ebapplications.data,
+            "heading_func": utils.heading,
+            "body_func": utils.body,
+        },
+        {
+            "name": "EB Environments",
+            "top_row": row_3_top,
+            "left_col": 25,
+            "rows": row_3_rows,
+            "cols": 25,
+            "pad": None,
+            "data": [["No data"]],
+            "data_func": ebenvironments.data,
             "heading_func": utils.heading,
             "body_func": utils.body,
         },

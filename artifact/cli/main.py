@@ -10,18 +10,32 @@ from botocore.exceptions import ClientError
 
 from artifact.client import autoscalinggroup
 from artifact.client import cloudformation
+from artifact.client import elasticbeanstalk
 from artifact.client import ecs
 from artifact.client import elasticloadbalancer
 from artifact.client import launchconfiguration
 
 from artifact.cli.utils import bash
-from artifact.cli.utils.cloudformation import create_cf_template
 
 
 @click.group()
 def cli():
     """Create artifacts in the cloud."""
     pass
+
+
+@cli.group()
+def eb():
+    """Manage Elastic Beanstalk artifacts."""
+    pass
+
+
+@eb.command(name="create")
+@click.argument("name")
+def create_eb_application(name):
+    """Create an EB application."""
+    response = elasticbeanstalk.create_application(name)
+    click.echo(name + " created.")
 
 
 @cli.group()
@@ -241,6 +255,7 @@ def cf():
 
 @cf.command(name="create")
 @click.argument("name")
+@click.argument("template_file")
 @click.option(
     "--min-size",
     default=1,
@@ -249,42 +264,21 @@ def cf():
     "--max-size",
     default=1,
     help="Maximum number of instances.")
-@click.option(
-    "--image",
-    help="Docker registry image (with tag).")
-@click.option(
-    "--username",
-    help="Docker registry username.")
-@click.option(
-    "--password",
-    help="Docker registry password.")
-@click.option(
-    "--email",
-    help="Docker registry email.")
-@click.option(
-    "--template-file",
-    help="Cloud Formation template file.")
 def create_cf(
         name,
+        template_file,
         min_size,
-        max_size,
-        image,
-        username,
-        password,
-        email,
-        template_file):
-    """Create a Cloud Formation artifact."""
-    ps_name = image.replace("/", "_").replace(":", "_")
-    ps_param = {"ParameterKey": "ContainerNameParameter", "ParameterValue": ps_name}
-    image_param = {"ParameterKey": "ImageParameter", "ParameterValue": image}
-    parameters = [ps_param, image_param]
+        max_size):
+    """Create a Cloud Formation stack."""
+    name_param = {"ParameterKey": "ClusterNameParameter", "ParameterValue": name}
+    min_size_param = {"ParameterKey": "MinSizeParameter", "ParameterValue": str(min_size)}
+    max_size_param = {"ParameterKey": "MaxSizeParameter", "ParameterValue": str(min_size)}
+    parameters = [name_param, min_size_param, max_size_param]
     params = {}
     params["name"] = name
     params["parameters"] = parameters
-    if template_file:
-        params["template_file"] = template_file
-    else:
-        params["template"] = create_cf_template(username, password, email)
+    params["capabilities"] = ["CAPABILITY_IAM"]
+    params["template_file"] = template_file
     response = cloudformation.create_stack(**params)
     click.echo("Stack " + name + " launching.")
 
@@ -292,7 +286,7 @@ def create_cf(
 @cf.command(name="delete")
 @click.argument("name")
 def delete_cf(name):
-    """Delete a Cloud Formation artifact."""
+    """Delete a Cloud Formation stack."""
     # Note: This does not raise an error if the stack doesn't exist.
     response = cloudformation.delete_stack(name)
     click.echo("Stack " + name + " terminating.")
