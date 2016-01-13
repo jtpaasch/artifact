@@ -1,0 +1,16 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "BasicEC2Instance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "ImageId": "ami-e3106686",
+        "InstanceType": "t2.micro",
+        "KeyName": "quickly_fitchet",
+        "SecurityGroupIds": [
+          "sg-be4db7d8"
+        ]
+      }
+    }
+  }
+}

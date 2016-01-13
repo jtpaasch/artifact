@@ -1,0 +1,23 @@
+{
+    "family": "test-1",
+    "containerDefinitions": [
+        {
+            "name": "simple_py_server",
+            "image": "jtpaasch/simplepythonserver:latest",
+            "memory": 100,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 80
+                }
+            ],
+            "environment": [
+                {
+                    "name": "foo",
+                    "value": "babar"
+                }
+            ]
+        }
+    ],
+    "volumes": []
+}

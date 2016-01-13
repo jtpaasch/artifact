@@ -1,0 +1,42 @@
+{
+    "family": "djangodbworker",
+    "containerDefinitions": [
+        {
+            "name": "djangodbworker",
+            "image": "jtpaasch/djangodbworker:latest",
+            "command": ["migrate"],
+            "memory": 100,
+            "environment": [
+                {
+                    "name": "DJANGO_SETTINGS_MODULE",
+                    "value": "project.settings"
+                },
+                {
+                    "name": "DJANGO_DB_ENGINE",
+                    "value": "mysql"
+                },
+                {
+                    "name": "DJANGO_DB_NAME",
+                    "value": "testdb"
+                },
+                {
+                    "name": "DJANGO_DB_USER",
+                    "value": "master"
+                },
+                {
+                    "name": "DJANGO_DB_PASSWORD",
+                    "value": "masterpass"
+                },
+                {
+                    "name": "DJANGO_DB_HOST",
+                    "value": "my-db.cjihtdv6m0sy.us-east-1.rds.amazonaws.com"
+                },
+                {
+                    "name": "DJANGO_DB_PORT",
+                    "value": "3306"
+                }
+            ]
+        }
+    ],
+    "volumes": []
+}

@@ -1,0 +1,7 @@
+DB instance identifier: my-db
+Master username: master
+Master password: masterpass
+
+DB host: my-db.cjihtdv6m0sy.us-east-1.rds.amazonaws.com
+DB port: 3306
+Database name: testdb

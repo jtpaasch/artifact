@@ -1,0 +1,5 @@
+amazon linux:
+ami-e3106686
+
+docker-optimized:
+ami-c16422a4

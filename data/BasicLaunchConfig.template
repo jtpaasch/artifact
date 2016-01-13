@@ -1,0 +1,16 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "BasicLaunchConfig": {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "Properties": {
+        "ImageId": "ami-e3106686",
+        "InstanceType": "t2.micro",
+        "KeyName": "quickly_fitchet",
+        "SecurityGroups": [
+          "sg-be4db7d8"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+        {
+            "name": "simpleton",
+            "image": "jtpaasch/simpleton:latest",
+            "memory": 100,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 80
+                }
+            ],
+            "environment": [
+                {
+                    "name": "FOO",
+                    "value": "something something something dark side"
+                }
+            ]
+        }
+    ],
+    "volumes": []
+}

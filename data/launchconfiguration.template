@@ -1,0 +1,76 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "ContainerNameParameter": {
+      "Type": "String",
+      "Description": "Enter a name for the running container."
+    },
+    "ImageParameter": {
+      "Type": "String",
+      "Description": "Enter a registry image (and tag)"
+    },
+    "MinSizeParameter": {
+      "Type": "Number",
+      "Default": "1",
+      "Description": "Enter the min size"
+    },
+    "MaxSizeParameter": {
+      "Type": "Number",
+      "Default": "1",
+      "Description": "Enter the max size"
+    }
+  },
+  "Resources": {
+    "ReeferLaunchConfig": {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "Properties": {
+        "AssociatePublicIpAddress": "true",
+        "ImageId": "ami-e3106686",
+        "InstanceType": "t2.micro",
+        "KeyName": "quickly_fitchet",
+        "SecurityGroups": [
+          "sg-be4db7d8"
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash -xe\n",
+                "\n",
+                "# Install and start docker.\n",
+                "yum install -y docker\n",
+                "service docker start\n",
+                "chkconfig docker on\n",
+                "\n",
+                "# Pull the docker image.\n",
+                "docker pull ", { "Ref": "ImageParameter" }, "\n",
+                "\n",
+                "# Start the container.\n",
+                "docker run \\\n",
+                "    --name ", {"Ref": "ContainerNameParameter"}, " \\\n",
+                "    --restart always \\\n",
+                "    -dti \\\n",
+                "    -p 80:80 \\\n",
+                "    ", {"Ref": "ImageParameter"}, "\n",
+                "\n"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "ReeferASG": {
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "Properties": {
+        "LaunchConfigurationName": { "Ref": "ReeferLaunchConfig" },
+        "MinSize": {"Ref": "MinSizeParameter"},
+        "MaxSize": {"Ref": "MaxSizeParameter"},
+        "VPCZoneIdentifier": [
+          "subnet-a1e1f9d6",
+          "subnet-33d2e06a"
+        ]
+      }
+    }
+  }
+}
